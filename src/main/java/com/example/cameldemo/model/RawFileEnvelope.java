@@ -1,11 +1,13 @@
-package com.example.cameldemo.entity;
+package com.example.cameldemo.model;
 
 
-import com.example.cameldemo.entity.enums.SourceChannel;
+import com.example.cameldemo.model.enums.SourceChannel;
+import lombok.Data;
 
 import java.time.Instant;
 import java.util.UUID;
 
+@Data
 public class RawFileEnvelope {
     Byte[] rwaByte;
     String fileName;
