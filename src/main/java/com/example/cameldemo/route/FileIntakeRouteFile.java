@@ -12,13 +12,17 @@ import java.time.Instant;
 
 @Component
 public class FileIntakeRouteFile extends RouteBuilder {
-    public void configure() throws Exception{
-        from("file:input").routeDescription("this route manage FILE canal").process(exchange -> {
+    public void configure() throws Exception {
+        from("file:input?delay=2000&noop=true").log("file name : ${header.CamelFileName}")
+                .process(exchange -> {
             RawFileEnvelope envelope = new RawFileEnvelope();
-            envelope.setRwaByte(exchange.getIn().getBody(Byte[].class));
+            envelope.setRawByte(exchange.getIn().getBody(byte[].class));
             envelope.setReceivedAt(Instant.now());
             envelope.setFileName(exchange.getIn().getHeader(Exchange.FILE_NAME,String.class));
             envelope.setSourceChannel(SourceChannel.FILE);
-        }).to("output");
+
+            exchange.getIn().setBody(envelope.toString());
+        })
+            .to("file:output");
     }
 }
